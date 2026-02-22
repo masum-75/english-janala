@@ -3,10 +3,57 @@ const loadLessons = () => {
     .then((res) => res.json())
     .then((res) => displayData(res.data));
 };
+const removeActive=()=>{
+  const lessonButton= document.querySelectorAll(".lesson-btn")
+  lessonButton.forEach((btn)=>
+    btn.classList.remove("active")
+  )
+}
 const wordLoadLesson = (id)=>{
     fetch(`https://openapi.programming-hero.com/api/level/${id}`)
     .then(res=>res.json())
-    .then(data => displayWord(data.data))
+    .then(data => {
+      removeActive();
+       const clickBtn = document.getElementById(`lesson-btn-${id}`)
+       clickBtn.classList.add("active")
+      displayWord(data.data)
+    })
+}
+const loadDetails = async(id)=>{
+const url = `https://openapi.programming-hero.com/api/word/${id}`
+const res= await fetch(url)
+const details = await res.json()
+displayWordDetails(details.data)
+}
+const displayWordDetails = (word)=>{
+  console.log(word)
+  const wordDetails = document.getElementById("details-container")
+  wordDetails.innerHTML = `
+ 
+        <div class="">
+          <h2 class="font-bold text-2xl">
+           ${word.word} ( <i class="fa-solid fa-microphone-lines"></i> :${word.pronunciation})
+          </h2>
+        </div>
+        <div class="">
+          <h2 class="font-bold">Meaning</h2>
+          <p class="text-xl font-bangla">${word.meaning}</p>
+        </div>
+        <div class="">
+          <h2 class="font-bold">sentence</h2>
+          <p class="text-medium">${word.sentence}.</p>
+        </div>
+        <div class="">
+          <h2 class="font-bold">Synonyms</h2>
+          
+          <span class="btn">${word.synonyms}</span>
+          <span class="btn">${word.synonyms}</span>
+          <span class="btn">${word.synonyms}</span>
+         
+        </div>
+      
+  `
+  document.getElementById("word_modal").showModal()
 }
 const displayWord = (words)=>{
 const wordLevelContainer = document.getElementById("word-container")
@@ -30,7 +77,7 @@ words.forEach((word)=>{
           <p class="font-semibold text-xl">${word.pronunciation}</p>
           <div class="text-xl font-medium font-bangla">${word.meaning}</div>
            <div class="flex justify-between items-center">
-        <button class="btn"><i class="fa-solid fa-circle-info"></i></button>
+        <button onclick="loadDetails(${word.id})" class="btn"><i class="fa-solid fa-circle-info"></i></button>
         <button class="btn "><i class="fa-solid fa-volume-high"></i></button>
         </div>
         </div>
@@ -44,7 +91,7 @@ const displayData = (lessons) => {
   for (let lesson of lessons) {
     const btnDiv = document.createElement("div");
     btnDiv.innerHTML = `
-        <button onclick = "wordLoadLesson(${lesson.level_no})" class="btn btn-outline btn-primary"><i class="fa-solid fa-book"></i> Lesson - ${lesson.level_no}</button>
+        <button id="lesson-btn-${lesson.level_no}" onclick = "wordLoadLesson(${lesson.level_no})" class="btn btn-outline btn-primary lesson-btn"><i class="fa-solid fa-book"></i> Lesson - ${lesson.level_no}</button>
         `;
 
         levelContainer.append(btnDiv)
