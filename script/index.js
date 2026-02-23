@@ -8,7 +8,13 @@ const createElement = (arr) => {
   return arr.map(el => `<span class="btn">${el}</span>`).join(" ");
 };
 
+// pronounceWord
 
+function pronounceWord(word) {
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = "en-EN"; 
+  window.speechSynthesis.speak(utterance);
+}
 
 // Load All Lessons
 
@@ -145,7 +151,7 @@ const displayWord = (words) => {
             <i class="fa-solid fa-circle-info"></i>
           </button>
 
-          <button class="btn">
+          <button onclick=pronounceWord('${word.word}') class="btn">
             <i class="fa-solid fa-volume-high"></i>
           </button>
         </div>
