@@ -1,6 +1,6 @@
-// =======================
+
 // Create Synonym Elements
-// =======================
+
 const createElement = (arr) => {
   if (!arr || arr.length === 0) {
     return `<span class="text-gray-400">No synonyms found</span>`;
@@ -9,9 +9,9 @@ const createElement = (arr) => {
 };
 
 
-// =======================
+
 // Load All Lessons
-// =======================
+
 const loadLessons = () => {
   fetch("https://openapi.programming-hero.com/api/levels/all")
     .then(res => res.json())
@@ -19,9 +19,9 @@ const loadLessons = () => {
 };
 
 
-// =======================
-// Spinner Control (FIXED)
-// =======================
+
+// Spinner Control 
+
 const manageSpinner = (status) => {
   const spinner = document.getElementById("spinner");
   const wordContainer = document.getElementById("word-container");
@@ -36,18 +36,18 @@ const manageSpinner = (status) => {
 };
 
 
-// =======================
+
 // Remove Active Button
-// =======================
+
 const removeActive = () => {
   const lessonButton = document.querySelectorAll(".lesson-btn");
   lessonButton.forEach(btn => btn.classList.remove("active"));
 };
 
 
-// =======================
+
 // Load Words By Lesson
-// =======================
+
 const wordLoadLesson = (id) => {
   manageSpinner(true);
 
@@ -64,9 +64,9 @@ const wordLoadLesson = (id) => {
 };
 
 
-// =======================
+
 // Load Word Details (Modal)
-// =======================
+
 const loadDetails = async (id) => {
   const url = `https://openapi.programming-hero.com/api/word/${id}`;
   const res = await fetch(url);
@@ -75,9 +75,9 @@ const loadDetails = async (id) => {
 };
 
 
-// =======================
+
 // Show Word Details
-// =======================
+
 const displayWordDetails = (word) => {
 
   const wordDetails = document.getElementById("details-container");
@@ -110,9 +110,9 @@ const displayWordDetails = (word) => {
 };
 
 
-// =======================
+
 // Display Word Cards
-// =======================
+
 const displayWord = (words) => {
 
   const wordLevelContainer = document.getElementById("word-container");
@@ -159,9 +159,9 @@ const displayWord = (words) => {
 };
 
 
-// =======================
+
 // Display Lesson Buttons
-// =======================
+
 const displayData = (lessons) => {
 
   const levelContainer = document.getElementById("level-container");
@@ -186,7 +186,25 @@ const displayData = (lessons) => {
 };
 
 
-// =======================
+
 // Initial Call
-// =======================
+
 loadLessons();
+
+
+// Search section
+
+
+document.getElementById("btn-search").addEventListener("click",()=>{
+  removeActive();
+  const input = document.getElementById("input-search");
+  const searchValue = input.value.trim().toLowerCase();
+  fetch("https://openapi.programming-hero.com/api/words/all")
+  .then(res=>res.json())
+  .then(data=>{
+     const allWords = data.data
+     const filterWords = allWords.filter((word)=>word.word.toLowerCase().includes(searchValue))
+      displayWord(filterWords);
+  });
+ 
+})
